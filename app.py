@@ -8,7 +8,18 @@ model = pickle.load(open('model.pkl', 'rb'))
 
 @app.route('/')
 def home():
-  return render_template('index.html')
+    # Add your code to render the home page here
+    return render_template('home.html')
+
+@app.route('/detect_cancer')
+def detect_cancer():
+    # Render the index.html page for the "Detect Breast Cancer" link
+    return render_template('index.html')
+
+@app.route('/info')
+def info():
+    # Render the index.html page for the "Detect Breast Cancer" link
+    return render_template('info.html')
 
 @app.route('/predict',methods=['POST'])
 def predict():

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title>Breast Cancer Detection</title>
+  <style>
+    /* Reset some default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-image: linear-gradient(315deg, #de5499 19%, #a0c5ba 85%);
+    }
+
+    /* Navbar styling */
+    .navbar {
+      background-color: #de5499;
+      border-bottom: 2px solid #de5499;
+    }
+    .navbar-brand {
+        font-size: 24px; /* Adjust the size as needed */
+      }
+
+    .navbar-brand,
+    .navbar-nav .nav-link {
+      color: #fff;
+      font-weight: bold;
+      padding :15px;
+    }
+
+    /* Main container styling */
+    .container {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .head {
+      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    /* Primary button styling */
+    .btn-primary {
+      background-color: #de5499;
+      border-color: #de5499;
+      color: #fff;
+      padding: 10px 20px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #c63e8d; /* Slightly darker shade on hover */
+    }
+
+    /* Label styling */
+    label {
+      font-weight: bold;
+      width: 50%;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    /* Form input styling */
+    .form-control {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%;
+    }
+
+    /* Hidden element for prediction */
+    #predict {
+      display: none;
+    }
+
+    /* Form group padding */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    /* Homepage container styling */
+    .home-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+    /* Background image container */
+    .bg_img {
+      background-image: url("{{ url_for('static', filename='img.jpeg') }}");
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      height: 400px; /* Adjust the height as needed */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Style for the contained image */
+    .image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain; /* or "cover" for different scaling options */
+    }
+    
+   
+
+    /* Additional styling for homepage content */
+    .home-content {
+      margin-top: 20px;
+    }
+
+    /* Styling for text on homepage */
+    .home-text {
+      color: #333;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    /* Learn More section container */
+    .learn-more {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    
+    /* Heading style */
+    .learn-more h2 {
+      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    
+    /* Text style */
+    .learn-more p {
+      color: #333;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    
+    /* List item style */
+    .learn-more ul {
+      list-style-type: disc;
+      margin-left: 20px;
+    }
+    
+    /* List item font weight */
+    .learn-more li {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+
+    /* Footer styling */
+    .footer {
+        background-image: linear-gradient(315deg, #de5499 19%, #a0c5ba 85%);
+
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+    }
+  </style>
+  <!--Font Awesome-->
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+    crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+    integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">Breast Cancer Detection</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('info') }}">Breast Cancer Information</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Homepage content -->
+  <div class="bg_img">
+    <img class="image" src="{{url_for('static', filename='img.jpeg')}}" width="100%" height="100%" />
+  </div>
+
+  <div class="container home-container">
+    <div class="home-content">
+      <h2 class="head">Breast Cancer Awareness</h2>
+      <p class="home-text">
+        Breast cancer is a common cancer in women, but early detection and awareness can make a significant difference in the
+        outcome. Regular screenings and self-examinations are essential to identify potential issues early. This website provides
+        information about breast cancer, its risk factors, and how to perform self-examinations. You can also use our breast
+        cancer detection tool for an initial assessment.
+      </p>
+      
+      <a class="btn btn-primary" href="{{ url_for('detect_cancer') }}">Detect Breast Cancer</a>
+    </div>
+  </div>
+
+  <!-- Learn More section -->
+  
+<div class="container learn-more">
+    <h2 class="head">Learn More</h2>
+    <p class="home-text">
+      Breast cancer is a complex condition with several factors and characteristics that are considered during diagnosis and treatment. Here's some information about key terms related to breast cancer:
+  
+      <ul>
+        <li><strong>Clump Thickness:</strong> Clump thickness is a measure of how thickly the cancer cells are clustered together. Thicker clumps may indicate a more advanced stage of cancer.</li>
+        <li><strong>Uniform Cell Size:</strong> Uniformity in cell size is an important factor. Variation in cell size can be a sign of malignancy.</li>
+        <li><strong>Uniform Cell Shape:</strong> Uniformity in cell shape, like cell size, is an important characteristic. Abnormal cell shapes can be indicative of cancer.</li>
+        <li><strong>Marginal Adhesion:</strong> Marginal adhesion refers to how well the cancer cells adhere to the surrounding tissue. Higher adhesion can be a sign of more aggressive cancer.</li>
+        <li><strong>Single Epithelial Cell Size:</strong> The size of single epithelial cells can be a diagnostic factor. Larger cells may indicate a more aggressive form of cancer.</li>
+        <li><strong>Bare Nuclei:</strong> The presence of bare nuclei in cells can be associated with malignancy.</li>
+        <li><strong>Bland Chromatin:</strong> Chromatin is the material inside the cell nucleus. The term "bland" suggests normal, while abnormal chromatin can be a sign of malignancy.</li>
+        <li><strong>Normal Nucleoli:</strong> Nucleoli are small structures within the cell nucleus. Normal nucleoli are characteristic of benign cells.</li>
+        <li><strong>Mitoses:</strong> Mitosis is the process of cell division. A higher number of mitoses may indicate rapidly dividing cancer cells.</li>
+      </ul>
+  
+      Understanding these terms can help individuals become more aware of the factors involved in breast cancer diagnosis and treatment.
+    </p>
+  </div>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>&copy; 2023 Breast Cancer Detection. All rights reserved.</p>
+  </div>
+</body>
+
+</html>
